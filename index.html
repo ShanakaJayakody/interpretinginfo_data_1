@@ -3,84 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Worksheet Dashboard</title>
+    <title>MedwithPurpose - Redirecting...</title>
+    <link rel="icon" href="https://ik.imagekit.io/mwp/2.svg?updatedAt=1745982956185" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
         }
-
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 40px;
+        .loading-spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
-
-        .worksheet-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        .worksheet-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .worksheet-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .worksheet-card h2 {
-            color: #2c3e50;
-            margin-bottom: 15px;
-        }
-
-        .worksheet-card a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .worksheet-card a:hover {
-            background-color: #2980b9;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <h1>Worksheet Dashboard</h1>
-    
-    <div class="worksheet-grid">
-        <div class="worksheet-card">
-            <h2>Worksheet 1</h2>
-            <a href="interpretinginfo1.html">Open Worksheet</a>
-        </div>
+<body class="min-h-screen flex items-center justify-center">
+    <div class="text-center">
+        <img src="https://ik.imagekit.io/mwp/MWP%20Color%20no%20background.png?updatedAt=1745982959141"
+             alt="MedwithPurpose Logo" class="mx-auto h-16 w-auto mb-6" onerror="this.style.display='none';">
         
-        <div class="worksheet-card">
-            <h2>Worksheet 2</h2>
-            <a href="#">Coming Soon</a>
-        </div>
+        <div class="loading-spinner mx-auto mb-4"></div>
         
-        <div class="worksheet-card">
-            <h2>Worksheet 3</h2>
-            <a href="#">Coming Soon</a>
-        </div>
+        <h1 class="text-2xl font-semibold text-gray-900 mb-2">Welcome to MedwithPurpose</h1>
+        <p class="text-gray-600 mb-4">Redirecting you to the student dashboard...</p>
+        
+        <p class="text-sm text-gray-500">
+            If you're not redirected automatically, 
+            <a href="student_dashboard.html" class="text-blue-600 hover:text-blue-800 underline">click here</a>.
+        </p>
     </div>
+
+    <script>
+        // Redirect to student dashboard after a short delay
+        setTimeout(function() {
+            window.location.href = 'student_dashboard.html';
+        }, 2000); // 2 second delay to show the loading screen
+
+        // Also redirect immediately if someone clicks anywhere
+        document.addEventListener('click', function() {
+            window.location.href = 'student_dashboard.html';
+        });
+    </script>
 </body>
 </html> 
