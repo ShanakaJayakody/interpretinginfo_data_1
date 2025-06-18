@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - MedwithPurpose</title>
+    <link rel="icon" href="https://ik.imagekit.io/mwp/2.svg?updatedAt=1745982956185" type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Firebase SDK -->
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+        .card:hover {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+        .worksheet-card {
+            border-left: 4px solid #3b82f6;
+        }
+        .results-card {
+            border-left: 4px solid #10b981;
+        }
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .score-excellent { background-color: #dcfce7; color: #15803d; }
+        .score-good { background-color: #fef3c7; color: #92400e; }
+        .score-needs-improvement { background-color: #fee2e2; color: #b91c1c; }
+        .loading-spinner {
+            border: 2px solid #f3f4f6;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <img src="https://ik.imagekit.io/mwp/MWP%20Color%20no%20background.png?updatedAt=1745982959141"
+                 alt="MedwithPurpose Logo" class="mx-auto h-12 w-auto mb-4" onerror="this.style.display='none';">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Student Dashboard</h1>
+            <p class="text-gray-600" id="welcome-message">Welcome back! Choose a worksheet to practice or review your results.</p>
+        </div>
+
+        <!-- User Info Card -->
+        <div class="card p-6 mb-8" id="user-info-card" style="display: none;">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900" id="user-name"></h2>
+                    <p class="text-gray-600" id="user-email"></p>
+                </div>
+                <button id="logout-button" class="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors">
+                    Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Worksheets Section -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-900 mb-6">Available Worksheets</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Worksheet 1 -->
+                <div class="card worksheet-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">DM Syllogisms Worksheet 1</h3>
+                        <span class="text-sm text-gray-500">5 Questions</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Practice logical reasoning with syllogism-based questions.</p>
+                    <div class="flex justify-between items-center">
+                        <button onclick="window.location.href='worksheet1.html'" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Start Practice
+                        </button>
+                        <span class="text-sm text-gray-500">6 minutes</span>
+                    </div>
+                </div>
+
+                <!-- Worksheet 2 -->
+                <div class="card worksheet-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">DM Syllogisms Worksheet 2</h3>
+                        <span class="text-sm text-gray-500">5 Questions</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Advanced logical reasoning practice with complex scenarios.</p>
+                    <div class="flex justify-between items-center">
+                        <button onclick="window.location.href='worksheet2.html'" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Start Practice
+                        </button>
+                        <span class="text-sm text-gray-500">6 minutes</span>
+                    </div>
+                </div>
+
+                <!-- Worksheet 3 -->
+                <div class="card worksheet-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">DM Syllogisms Worksheet 3</h3>
+                        <span class="text-sm text-gray-500">5 Questions</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">Master-level logical reasoning with challenging problems.</p>
+                    <div class="flex justify-between items-center">
+                        <button onclick="window.location.href='worksheet3.html'" 
+                                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors">
+                            Start Practice
+                        </button>
+                        <span class="text-sm text-gray-500">6 minutes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results History Section -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-semibold text-gray-900">Your Results History</h2>
+                <button id="refresh-results" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors flex items-center gap-2">
+                    <span class="loading-spinner" id="loading-spinner" style="display: none;"></span>
+                    Refresh
+                </button>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="results-loading" class="text-center py-8">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-gray-600">Loading your results...</p>
+            </div>
+
+            <!-- No Results State -->
+            <div id="no-results" class="text-center py-8" style="display: none;">
+                <div class="text-gray-400 mb-4">
+                    <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No Results Yet</h3>
+                <p class="text-gray-600">Complete a worksheet to see your results here.</p>
+            </div>
+
+            <!-- Results Grid -->
+            <div id="results-grid" class="grid gap-4" style="display: none;">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Statistics Summary -->
+        <div class="card p-6" id="stats-summary" style="display: none;">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Summary</h3>
+            <div class="grid md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="total-attempts">0</div>
+                    <div class="text-sm text-gray-600">Total Attempts</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-600" id="avg-score">0%</div>
+                    <div class="text-sm text-gray-600">Average Score</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-purple-600" id="best-score">0%</div>
+                    <div class="text-sm text-gray-600">Best Score</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-orange-600" id="avg-time">0m</div>
+                    <div class="text-sm text-gray-600">Average Time</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyASKsaFFTZ-finv2d5egR9K_mZNstEwdns",
+            authDomain: "mwp-qr-test-page.firebaseapp.com",
+            projectId: "mwp-qr-test-page",
+            storageBucket: "mwp-qr-test-page.appspot.com",
+            messagingSenderId: "309084045110",
+            appId: "1:309084045110:web:b09ca0fdff84b094963d97",
+            measurementId: "G-4M3ED641M9"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let currentUser = null;
+
+        // DOM elements
+        const userInfoCard = document.getElementById('user-info-card');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+        const logoutButton = document.getElementById('logout-button');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const resultsLoading = document.getElementById('results-loading');
+        const noResults = document.getElementById('no-results');
+        const resultsGrid = document.getElementById('results-grid');
+        const statsummary = document.getElementById('stats-summary');
+        const refreshButton = document.getElementById('refresh-results');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
+        // Auth state listener
+        auth.onAuthStateChanged(user => {
+            currentUser = user;
+            if (user) {
+                // User is logged in
+                userName.textContent = user.displayName || 'Student';
+                userEmail.textContent = user.email;
+                userInfoCard.style.display = 'block';
+                welcomeMessage.textContent = `Welcome back, ${user.displayName || 'Student'}! Choose a worksheet to practice or review your results.`;
+                loadResults();
+            } else {
+                // User is not logged in
+                userInfoCard.style.display = 'none';
+                welcomeMessage.textContent = 'Welcome! Choose a worksheet to practice. Results will be saved if you log in.';
+                showNoResults();
+            }
+        });
+
+        // Logout functionality
+        logoutButton.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                console.log('User signed out');
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        });
+
+        // Refresh results
+        refreshButton.addEventListener('click', () => {
+            if (currentUser) {
+                loadResults();
+            }
+        });
+
+        // Load results from Firestore
+        async function loadResults() {
+            if (!currentUser) {
+                showNoResults();
+                return;
+            }
+
+            showLoading();
+            loadingSpinner.style.display = 'inline-block';
+            refreshButton.disabled = true;
+
+            try {
+                const querySnapshot = await db.collection("performanceSubmissions")
+                    .where("userId", "==", currentUser.uid)
+                    .orderBy("submissionTimestamp", "desc")
+                    .get();
+
+                const results = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    results.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                if (results.length === 0) {
+                    showNoResults();
+                } else {
+                    displayResults(results);
+                    updateStatistics(results);
+                }
+            } catch (error) {
+                console.error("Error loading results:", error);
+                showNoResults();
+            } finally {
+                loadingSpinner.style.display = 'none';
+                refreshButton.disabled = false;
+            }
+        }
+
+        function showLoading() {
+            resultsLoading.style.display = 'block';
+            noResults.style.display = 'none';
+            resultsGrid.style.display = 'none';
+            statsummary.style.display = 'none';
+        }
+
+        function showNoResults() {
+            resultsLoading.style.display = 'none';
+            noResults.style.display = 'block';
+            resultsGrid.style.display = 'none';
+            statsummary.style.display = 'none';
+        }
+
+        function displayResults(results) {
+            resultsLoading.style.display = 'none';
+            noResults.style.display = 'none';
+            resultsGrid.style.display = 'grid';
+            statsummary.style.display = 'block';
+
+            resultsGrid.innerHTML = '';
+
+            results.forEach(result => {
+                const resultCard = createResultCard(result);
+                resultsGrid.appendChild(resultCard);
+            });
+        }
+
+        function createResultCard(result) {
+            const card = document.createElement('div');
+            card.className = 'card results-card p-4';
+
+            const score = parseInt(result.score) || 0;
+            const totalScore = parseInt(result.totalPossibleScore) || parseInt(result.totalQuestions) || 10;
+            const percentage = Math.round((score / totalScore) * 100);
+            
+            let scoreBadgeClass = 'score-needs-improvement';
+            if (percentage >= 80) scoreBadgeClass = 'score-excellent';
+            else if (percentage >= 60) scoreBadgeClass = 'score-good';
+
+            const submissionDate = new Date(result.submissionTimestamp).toLocaleDateString();
+            const submissionTime = new Date(result.submissionTimestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-semibold text-gray-900">${result.examName || 'Worksheet'}</h3>
+                    <span class="score-badge ${scoreBadgeClass}">${score}/${totalScore}</span>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-3">
+                    <div>
+                        <span class="font-medium">Date:</span> ${submissionDate}
+                    </div>
+                    <div>
+                        <span class="font-medium">Time:</span> ${submissionTime}
+                    </div>
+                    <div>
+                        <span class="font-medium">Duration:</span> ${result.timeTaken || 'N/A'}
+                    </div>
+                    <div>
+                        <span class="font-medium">Score:</span> ${percentage}%
+                    </div>
+                </div>
+                ${result.reflection ? `
+                    <div class="text-sm text-gray-600 mb-3">
+                        <span class="font-medium">Reflection:</span> 
+                        <p class="mt-1 italic">"${result.reflection}"</p>
+                    </div>
+                ` : ''}
+                <div class="flex justify-between items-center">
+                    <button onclick="reviewResult('${result.id}')" 
+                            class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors">
+                        Review Answers
+                    </button>
+                    <span class="text-xs text-gray-500">
+                        ${result.focusRating ? `Focus: ${result.focusRating}/5` : ''}
+                    </span>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function updateStatistics(results) {
+            const totalAttempts = results.length;
+            const scores = results.map(r => {
+                const score = parseInt(r.score) || 0;
+                const total = parseInt(r.totalPossibleScore) || parseInt(r.totalQuestions) || 10;
+                return (score / total) * 100;
+            });
+            
+            const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : 0;
+            const bestScore = scores.length > 0 ? Math.round(Math.max(...scores)) : 0;
+            
+            // Calculate average time (simplified)
+            const times = results.filter(r => r.timeTaken).map(r => {
+                const timeStr = r.timeTaken;
+                const match = timeStr.match(/(\d+) min/);
+                return match ? parseInt(match[1]) : 0;
+            });
+            const avgTime = times.length > 0 ? Math.round(times.reduce((a, b) => a + b, 0) / times.length) : 0;
+
+            document.getElementById('total-attempts').textContent = totalAttempts;
+            document.getElementById('avg-score').textContent = `${avgScore}%`;
+            document.getElementById('best-score').textContent = `${bestScore}%`;
+            document.getElementById('avg-time').textContent = `${avgTime}m`;
+        }
+
+        // Review result function
+        window.reviewResult = function(resultId) {
+            // Get the result data to determine which worksheet to open
+            const resultCards = document.querySelectorAll('.results-card');
+            let examName = '';
+            
+            // Find the exam name from the clicked result
+            resultCards.forEach(card => {
+                const button = card.querySelector(`button[onclick="reviewResult('${resultId}')"]`);
+                if (button) {
+                    examName = card.querySelector('h3').textContent;
+                }
+            });
+            
+            // Route to the appropriate worksheet
+            let worksheetUrl = 'worksheet1.html';
+            if (examName.includes('Worksheet 2')) {
+                worksheetUrl = 'worksheet2.html';
+            } else if (examName.includes('Worksheet 3')) {
+                worksheetUrl = 'worksheet3.html';
+            }
+            
+            window.location.href = `${worksheetUrl}?review=${resultId}`;
+        };
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dashboard is ready
+        });
+    </script>
+</body>
+</html> 
