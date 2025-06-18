@@ -42,30 +42,121 @@
         /* Header and Footer */
         .header-bar { /* Topmost bar */
             flex-shrink: 0;
-            background-color: #005A8C; /* Slightly darker blue for top bar */
+            background-color: #0066cc; /* UCAT blue */
             color: white;
-            padding: 0.5rem 1.5rem; /* Adjusted padding */
+            padding: 0.75rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 20; /* Ensure it's above the secondary bar if overlapping */
+            z-index: 20;
+            font-size: 1.25rem;
+            font-weight: 500;
         }
 
         .secondary-toolbar { /* New toolbar for calculator and flag */
             flex-shrink: 0;
-            background-color: #007BBD; /* Lighter blue for secondary bar */
+            background-color: #4a90e2; /* Lighter blue for secondary bar */
             color: white;
-            padding: 0.5rem 1.5rem; /* Consistent padding */
+            padding: 0.5rem 1rem;
             display: flex;
-            justify-content: space-between; /* Align items */
+            justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #005A8C; /* Optional: a subtle separator */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 19;
         }
 
         /* Specific text colors within header/footer */
-        .header-bar span, .header-bar div, .secondary-toolbar span, .secondary-toolbar div {
-             color: white;
+        .header-bar span, .header-bar div {
+            color: white;
+            font-weight: 500;
+        }
+
+        /* Question progress indicator */
+        .question-progress {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        /* Buttons in secondary toolbar */
+        .secondary-toolbar-button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .secondary-toolbar-button:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+        .secondary-toolbar-button.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-color: white;
+        }
+
+        /* Statement rows and answer boxes */
+        .statement-row {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            background: white;
+            transition: all 0.2s ease;
+        }
+        .statement-row:hover {
+            border-color: #93c5fd;
+            background-color: #f8fafc;
+        }
+        .statement-answer-box {
+            width: 80px;
+            height: 40px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f3f4f6;
+            font-weight: 500;
+            color: #4b5563;
+            margin-left: 1rem;
+        }
+        .statement-answer-box.dragging-over {
+            border-color: #60a5fa;
+            background-color: #eff6ff;
+        }
+
+        /* Yes/No buttons */
+        .drag-button {
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        #yes-button {
+            background-color: #dcfce7;
+            border: 2px solid #22c55e;
+            color: #15803d;
+        }
+        #yes-button:hover {
+            background-color: #bbf7d0;
+        }
+        #no-button {
+            background-color: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #b91c1c;
+        }
+        #no-button:hover {
+            background-color: #fecaca;
         }
         #timer {
              background-color: rgba(255, 255, 255, 0.2); 
@@ -75,28 +166,7 @@
              border-radius: 0.25rem; 
         }
         
-        /* Buttons in secondary toolbar */
-        .secondary-toolbar-button {
-            background-color: transparent;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            padding: 0.3rem 0.7rem;
-            font-size: 0.8rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.2s ease, border-color 0.2s ease;
-            margin-left: 0.5rem; /* Spacing between buttons */
-        }
-        .secondary-toolbar-button:hover:not(:disabled) {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: white;
-        }
-        .secondary-toolbar-button.active { /* For calculator button when active */
-            background-color: rgba(255, 255, 255, 0.2);
-            border-color: white;
-        }
-
-
-         /* Footer Button Styling */
+        /* Footer Button Styling */
         .footer-bar {
             flex-shrink: 0;
             background-color: #005A8C; /* Match top bar color */
@@ -145,20 +215,121 @@
 
         /* Main Content Area */
         .main-content-area {
-            flex-grow: 1; 
-            display: block;
-            overflow: hidden; 
-            padding: 1rem; 
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: 1.5rem;
+            background-color: #f8fafc;
         }
+
         .question-column {
-             width: 100%;
+            flex-grow: 1;
             overflow-y: auto;
+            padding: 1.5rem;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Question content styling */
+        .premises-container {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .premises-container p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #1f2937;
+        }
+
+        .premises-container p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Question instructions */
+        .question-instructions {
+            margin-bottom: 1.5rem;
             padding: 1rem;
-            border: 1px solid #e5e7eb;
-            border-radius: 0.375rem;
-             background-color: #fff;
-             height: 100%; 
-             position: relative; 
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            color: #0369a1;
+            font-size: 0.95rem;
+        }
+
+        /* Statement section */
+        .statements-section {
+            margin-top: 1.5rem;
+        }
+
+        .statements-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .statements-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .statements-instruction {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        /* Footer navigation */
+        .footer-bar {
+            flex-shrink: 0;
+            background-color: #0066cc;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-bar button {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .footer-bar button:hover:not(:disabled) {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        .footer-bar button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .footer-bar button#next-button {
+            background-color: white;
+            color: #0066cc;
+            border: none;
+            font-weight: 500;
+            padding: 0.5rem 1.25rem;
+        }
+
+        .footer-bar button#next-button:hover:not(:disabled) {
+            background-color: #f0f9ff;
         }
 
         .selected-answer {
@@ -989,31 +1160,33 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
                 questionContainer.style.flex = '1';
                 questionContainer.style.marginTop = '0';
                 
-                // Create HTML for premises and statements
-                let premisesHtml = '<div class="p-4 bg-gray-50 rounded-md mb-4" style="background-color: #f9fafb; border: 1px solid #e5e7eb; padding: 1.25rem; line-height: 1.5;">';
-                premisesHtml += '<h3 class="font-semibold mb-2">Premises</h3>';
+                // Create HTML for premises section
+                let premisesHtml = `
+                    <div class="question-instructions">
+                        Place "Yes" if the conclusion does follow. Place "No" if the conclusion does not follow.
+                    </div>
+                    <div class="premises-container">`;
                 
                 question.premises.forEach(premise => {
-                    premisesHtml += `<p class="mb-2">${premise}</p>`;
+                    premisesHtml += `<p>${premise}</p>`;
                 });
                 
                 premisesHtml += '</div>';
                 
                 // Create HTML for statements section with Yes/No buttons on the right
                 let statementsHtml = `
-                    <h4 class="text-md font-semibold mb-3 bg-white pb-1">Question ${index + 1}</h4>
-                    <div class="flex justify-between items-center mb-3">
-                        <div>
-                            <h5 class="font-medium mb-2">Conclusions</h5>
-                            <p class="text-sm text-gray-600">Drag 'Yes' or 'No' onto the statement row.</p>
+                    <div class="statements-section">
+                        <div class="statements-header">
+                            <div class="statements-title">Question ${index + 1}</div>
+                            <div class="flex space-x-3">
+                                <button id="yes-button" class="drag-button">Yes</button>
+                                <button id="no-button" class="drag-button">No</button>
+                            </div>
                         </div>
-                        <div class="flex space-x-2">
-                            <button id="yes-button" class="drag-button px-6 py-2 bg-green-100 border border-green-500 rounded-md text-green-700 font-medium">Yes</button>
-                            <button id="no-button" class="drag-button px-6 py-2 bg-red-100 border border-red-500 rounded-md text-red-700 font-medium">No</button>
-                        </div>
+                        <p class="statements-instruction">Drag 'Yes' or 'No' onto each statement row.</p>
+                        <div id="statements-container" class="mt-4"></div>
+                        <div id="review-explanation-container"></div>
                     </div>
-                    <div id="statements-container" class="space-y-3"></div>
-                    <div id="review-explanation-container"></div>
                 `;
                 
                 questionContainer.innerHTML = premisesHtml + statementsHtml;
@@ -1033,15 +1206,15 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
                 question.statements.forEach((statement, i) => {
                     const statementId = `q${index}_statement${i}`;
                     const rowDiv = document.createElement('div');
-                    rowDiv.className = 'statement-row flex items-center mb-3 border border-gray-200 rounded-md p-3 bg-white';
+                    rowDiv.className = 'statement-row';
                     rowDiv.dataset.statementIndex = i;
                     rowDiv.innerHTML = `
-                        <div class="flex-grow statement-text">
-                            <span class="font-medium">${i + 1}.</span> ${statement}
+                        <div class="flex-grow">
+                            <span class="font-medium mr-2">${i + 1}.</span>
+                            <span class="statement-text">${statement}</span>
                         </div>
-                        <div class="flex-shrink-0 ml-4 relative">
-                            <div class="statement-answer-box w-16 h-10 border border-gray-300 rounded flex items-center justify-center bg-gray-50" 
-                                 data-statement-index="${i}">
+                        <div class="flex-shrink-0">
+                            <div class="statement-answer-box" data-statement-index="${i}">
                                 ${userAnswers[index] && userAnswers[index][i] ? userAnswers[index][i] : '...'}
                             </div>
                         </div>
@@ -1055,16 +1228,20 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
                         const userAnswer = userAnswers[index] && userAnswers[index][i] ? userAnswers[index][i] : null;
                         const correctAnswer = question.correctAnswers[i];
                         
-                        answerBox.classList.remove('border-gray-300', 'bg-gray-50');
-                        
                         if (userAnswer === correctAnswer) {
-                            answerBox.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                            answerBox.classList.add('correct-answer');
+                            answerBox.style.backgroundColor = '#dcfce7';
+                            answerBox.style.borderColor = '#22c55e';
+                            answerBox.style.color = '#15803d';
                         } else {
-                            answerBox.classList.add('border-red-500', 'bg-red-50', 'text-red-700');
+                            answerBox.classList.add('incorrect-answer');
+                            answerBox.style.backgroundColor = '#fee2e2';
+                            answerBox.style.borderColor = '#ef4444';
+                            answerBox.style.color = '#b91c1c';
                             
-                            // Show correct answer
+                            // Show correct answer below
                             const correctDiv = document.createElement('div');
-                            correctDiv.className = 'mt-1 text-xs text-gray-600';
+                            correctDiv.className = 'text-sm text-gray-600 mt-1';
                             correctDiv.textContent = `Correct answer: ${correctAnswer}`;
                             rowDiv.querySelector('.flex-shrink-0').appendChild(correctDiv);
                         }

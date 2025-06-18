@@ -835,69 +835,83 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
         const questions = [
             {
                 premises: [
-                    "All oranges in the bowl are sweet.",
-                    "This fruit is an orange in the bowl."
+                    "In a clinical-laboratory context, routine quality–control (QC) procedures are cyclical, rule-bound activities intended to keep instrumentation and workflows within tolerance, and they recur for as long as the laboratory stays in service.",
+                    "By contrast, a research experiment is mounted to answer a sharply framed question; it begins with a protocol and ends when the planned analyses are complete—even if the calendar span is long.",
+                    "Today's biomedical scientists usually straddle both spheres: they must supervise the repetitive compliance assays that keep accreditation intact and steer hypothesis-driven projects that push the discipline forward. Possessing a dual skill-set is therefore no longer optional."
                 ],
                 statements: [
-                    "This fruit is sweet.",
-                    "Some sweet fruits in the bowl are oranges.",
-                    "No non-sweet fruits in the bowl are oranges.",
-                    "All sweet fruits in the bowl are oranges.",
-                    "Some fruits in the bowl are not sweet."
+                    "A research experiment is conducted to secure a particular finding.",
+                    "Modern biomedical scientists perform a wider variety of duties than their predecessors.",
+                    "Procedures that continue without a predefined stopping point belong to the realm of routine QC rather than to research experiments.",
+                    "Running an automated full-blood-count check on every inpatient each dawn exemplifies a routine laboratory activity.",
+                    "Developing a brand-new molecular assay for an emerging pathogen is an example of an open-ended QC task."
                 ],
-                correctAnswers: ["Y", "N", "Y", "N", "N"]
+                correctAnswers: ["Y", "Y", "Y", "Y", "N"]
             },
             {
                 premises: [
-                    "No penguin can fly."
+                    "Unlike a newsroom's continuous stream of everyday reporting—which aims to keep audiences informed through an endless sequence of brief, repetitive updates—an investigative assignment is oriented toward unearthing a specific revelation and therefore has both an identifiable launch point and an anticipated wrap‑up. The time span of such an inquiry can be long or short, but it is always finite.",
+                    "Modern journalists, rather than limiting themselves to routine dispatches, frequently toggle between fast‑turn pieces and in‑depth probes; wearing these two hats successfully calls for a broad, flexible skill set."
                 ],
                 statements: [
-                    "Some penguins can fly.",
-                    "If something can fly, it is not a penguin.",
-                    "All penguins cannot fly.",
-                    "Some creatures that cannot fly are penguins.",
-                    "All creatures that cannot fly are penguins."
+                    "An investigative assignment is designed to culminate in one particular disclosure.",
+                    "Contemporary reporters perform a wider variety of tasks than their strictly beat‑focused predecessors.",
+                    "Coverage that continues indefinitely without a scheduled endpoint belongs exclusively to the newsroom's day‑to‑day cycle.",
+                    "Broadcasting live traffic bulletins every fifteen minutes is an example of ongoing routine coverage rather than a discrete investigation.",
+                    "Producing a multipart exposé on corporate wrongdoing should be classified as ordinary, never‑ending daily reporting."
                 ],
-                correctAnswers: ["N", "Y", "Y", "N", "N"]
+                correctAnswers: ["Y", "Y", "Y", "Y", "N"]
             },
             {
                 premises: [
-                    "Every burger on the menu contains bread."
+                    "When analysing what drives the productivity of fully-remote teams, one must look beyond the hardware specs of laptops or the nominal speed of a fibre link.",
+                    "Historically, communication corridors have shadowed transport corridors: 19ᵗʰ-century telegraph wires followed railways, and today submarine cables trace shipping routes.",
+                    "In regions where gigabit-class broadband is widespread, firms pivot to cloud-centric workflows far earlier than in bandwidth-poor districts; yet data capacity by itself rarely guarantees out-performance.",
+                    "Only when the local work culture favours asynchronous collaboration—so that employees exploit the always-available network rather than wait for simultaneous meetings—do high-capacity pipes translate into measurable output gains.",
+                    "The pattern compounds when venture capital and skilled migrants co-locate in cities offering both robust digital networks and a culture that prizes flexible schedules; such hubs often surge ahead of competitors with comparable human capital but patchy infrastructure."
                 ],
                 statements: [
-                    "Some bread items on the menu are burgers.",
-                    "All bread items on the menu are burgers.",
-                    "Some burgers on the menu do not contain bread.",
-                    "No burgers on the menu lack bread.",
-                    "Some menu items lack bread."
+                    "Cultural attitudes toward teamwork have no influence on how effectively ultra-fast internet is used.",
+                    "Regions endowed with strong backbone connectivity usually migrate to cloud platforms earlier than poorly connected areas.",
+                    "Highly trained migrants chiefly choose locations for their abundant human capital, not for reliable digital networks.",
+                    "Merely installing robust broadband does not automatically yield large productivity gains.",
+                    "Economic hubs often arise where venture capital, talent and high-grade connectivity intersect."
                 ],
-                correctAnswers: ["N", "N", "N", "Y", "N"]
+                correctAnswers: ["N", "Y", "N", "Y", "Y"]
             },
             {
                 premises: [
-                    "Some books in the library are new."
+                    "To grasp the productivity and long‑term health of individuals, their nightly sleep patterns deserve careful attention.",
+                    "Robust evidence links sufficient, consistent sleep to sharper learning, steadier moods, and a more resilient immune system.",
+                    "Anthropological studies suggest our ancestors aligned their rest with natural light cycles, reinforcing the biological clock that still governs us today.",
+                    "Moreover, moderate physical activity has been shown to deepen sleep quality, thereby magnifying its cognitive and immunological dividends.",
+                    "Conversely, chronic sleep restriction erodes concentration, dampens emotional regulation, and heightens vulnerability to common infections."
                 ],
                 statements: [
-                    "All books in the library are new.",
-                    "Some books in the library are not new.",
-                    "At least one new item in the library is a book.",
-                    "No new items in the library are books.",
-                    "There is at least one book in the library."
+                    "Enhanced cognitive performance is the primary cause of better sleep habits.",
+                    "According to the passage, steady sleep strengthens one's capacity to master new skills.",
+                    "The author claims that consuming caffeine completely cancels the negative impact of sleep loss.",
+                    "It is reasonable to infer that people who exercise regularly may fend off colds more effectively because exercise improves their sleep.",
+                    "From the author's argument, students who repeatedly pull all‑nighters are likely to remember less than equally capable classmates who sleep well."
                 ],
-                correctAnswers: ["N", "N", "Y", "N", "Y"]
+                correctAnswers: ["N", "Y", "N", "Y", "Y"]
             },
             {
                 premises: [
-                    "All dogs at the shelter are vaccinated."
+                    "No soil in any equatorial highland is as agriculturally productive as that found on the wind‑ward slopes of Mount Izara.",
+                    "As a local response to recurrent eruptions, the thin, nutrient‑spent top‑soil is steadily blanketed by dense, mineral‑rich volcanic ash that rain carries downslope to replace it.",
+                    "The idea that these fresh mineral deposits underlie the exceptional growth of arabica coffee gained credibility when laboratory tests from the eastern terraces revealed high levels of potassium, magnesium and nitrates.",
+                    "Arabica shrubs synthesise caffeine—a bitter alkaloid that discourages many leaf‑eating insects yet entices pollinators and fruit‑feeding birds—and thus form the cornerstone of several terrestrial food chains.",
+                    "The crop flourishes in the highland's cool, mist‑laden air; prolonged heat in the lowlands, by contrast, impairs its development."
                 ],
                 statements: [
-                    "Some vaccinated animals at the shelter are dogs.",
-                    "Some dogs at the shelter are not vaccinated.",
-                    "All vaccinated animals at the shelter are dogs.",
-                    "No dogs at the shelter are unvaccinated.",
-                    "Some animals at the shelter are not vaccinated."
+                    "Volcanic activity increases the productivity of Mount Izara's mountain soil.",
+                    "Arabica coffee provides nourishment for certain highland animals.",
+                    "The eastern terraces of Mount Izara are unlikely to support successful farming ventures.",
+                    "In limited high‑elevation zones, mineral‑laden ash supplants poorer surface soils.",
+                    "The abundance of arabica shrubs in this region rises in direct proportion to higher air temperatures."
                 ],
-                correctAnswers: ["N", "N", "N", "Y", "N"]
+                correctAnswers: ["Y", "Y", "N", "Y", "N"]
             }
         ];
 
