@@ -3,637 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UCAT DM Practice - MedwithPurpose</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Worksheet Dashboard</title>
     <style>
-        /* Custom styles for better UI/UX */
-        html, body {
-            height: 100%;
+        body {
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 0;
-            overflow: hidden; /* Prevent scrolling on body */
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* --- REDESIGNED THEMES --- */
-        .theme-background {
-            background-color: #f0f2f5;
-        }
-
-        #setup-screen, #results-screen {
-            background: linear-gradient(170deg, #c7d2fe 0%, #f0f2f5 50%, #b0bec5 100%);
-        }
-
-        .card {
-            background-color: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-            border-radius: 1rem;
-        }
-        
-        .primary-button-new {
-            background-image: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: white;
-            border: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 0.5rem;
-        }
-        .primary-button-new:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-            background-image: linear-gradient(135deg, #4338ca, #4f46e5);
-        }
-
-        /* --- Test Environment Styles --- */
-        #app-container {
+            padding: 20px;
+            background-color: #f5f5f5;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 2rem);
-            width: 100%;
-            background-color: #ffffff;
-            border: 1px solid #d1d5db;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border-radius: 0.375rem;
-            margin: 1rem;
-            overflow: hidden;
-        }
-        .header-bar, .footer-bar {
-            flex-shrink: 0;
-            background-color: #006DAA;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-        #timer { background-color: rgba(255, 255, 255, 0.2); color: white; font-weight: bold; padding: 0.25rem 0.75rem; border-radius: 0.25rem; }
-        .footer-bar button { background-color: transparent; color: white; border: 1px solid rgba(255, 255, 255, 0.5); padding: 0.4rem 0.8rem; font-size: 0.8rem; border-radius: 0.375rem; transition: background-color 0.2s ease, border-color 0.2s ease; }
-        .footer-bar button:hover:not(:disabled) { background-color: rgba(255, 255, 255, 0.15); border-color: white; }
-        .footer-bar button:disabled { opacity: 0.5; cursor: not-allowed; }
-        .footer-bar button#next-button { background-color: #ffffff; color: #006DAA; border: 1px solid white; font-weight: 500; }
-        .footer-bar button#next-button:hover:not(:disabled) { background-color: #f0f0f0; }
-        #flag-button.flagged { background-color: #facc15; border-color: #facc15; color: #422006; }
-
-        .main-content-area { flex-grow: 1; display: flex; overflow: hidden; padding: 1rem; gap: 1rem; }
-        .passage-column { flex: 0 0 50%; overflow-y: auto; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.375rem; }
-        .question-column { flex: 0 0 50%; display: flex; flex-direction: column; overflow-y: auto; padding: 1rem; }
-        
-        /* --- Decision Making Layout Styles --- */
-        #dm-container { display: flex; flex-grow: 1; gap: 1rem; }
-        #dm-statements { flex-grow: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-        #dm-options { flex-shrink: 0; display: flex; flex-direction: column; gap: 0.5rem; justify-content: center; }
-        
-        .statement-row {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-        .statement-text {
-            flex-grow: 1;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            background-color: #f9fafb;
-        }
-        .answer-box {
-            flex-shrink: 0;
-            width: 80px;
-            height: 40px;
-            border: 2px dashed #d1d5db;
-            border-radius: 0.375rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .answer-box.yes { border: 2px solid #10b981; background-color: #d1fae5; color: #065f46; }
-        .answer-box.no { border: 2px solid #ef4444; background-color: #fee2e2; color: #991b1b; }
-        .answer-box.selected-for-answer {
-            border-color: #3b82f6;
-            background-color: #dbeafe;
-            transform: scale(1.05);
         }
 
-        .dm-option-button {
-            width: 80px;
-            padding: 0.5rem;
-            border: 1px solid #6b7280;
-            border-radius: 0.375rem;
+        h1 {
+            color: #333;
             text-align: center;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            margin-bottom: 40px;
         }
-        .dm-option-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+        .worksheet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
         }
-        #dm-yes-button { background-color: #d1fae5; color: #065f46; }
-        #dm-no-button { background-color: #fee2e2; color: #991b1b; }
 
-        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
-        .modal-content { background-color: #fefefe; padding: 20px; border: 1px solid #888; width: 80%; max-width: 600px; border-radius: 0.5rem; }
-        .modal.flex { display: flex; }
+        .worksheet-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
 
-        #results-grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 1rem; }
-        .result-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0.5rem; border-radius: 0.5rem; color: white; cursor: pointer; transition: transform 0.2s ease; }
-        .result-box-perfect { background: linear-gradient(145deg, #22c55e, #15803d); } /* 2 marks */
-        .result-box-good { background: linear-gradient(145deg, #a3e635, #65a30d); } /* 1 mark */
-        .result-box-bad { background: linear-gradient(145deg, #ef4444, #b91c1c); } /* 0 marks */
-        .result-box.result-box-flagged { outline: 3px solid #f59e0b; }
-        .result-box .question-num { font-size: 0.8rem; opacity: 0.9; }
-        .result-box .marks-awarded { font-size: 1.5rem; font-weight: 700; }
-        .result-box .correct-count { font-size: 0.9rem; }
-        
-        .explanation-box { background-color: #f3f4f6; border: 1px solid #d1d5db; padding: 1rem; margin-top: 1rem; border-radius: 0.375rem; }
-        .explanation-box h5 { font-weight: bold; margin-bottom: 0.5rem; }
-        .statement-review { margin-bottom: 0.5rem; padding: 0.5rem; border-radius: 0.25rem; }
-        .statement-review.correct { background-color: #e0f2fe; border-left: 4px solid #0284c7; }
-        .statement-review.incorrect { background-color: #fee2e2; border-left: 4px solid #ef4444; }
-        
-        @media (max-width: 768px) {
-            #app-container { height: auto; margin: 0.5rem; }
-            .main-content-area { flex-direction: column; }
+        .worksheet-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .worksheet-card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .worksheet-card a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .worksheet-card a:hover {
+            background-color: #2980b9;
         }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="theme-background">
-
-    <div id="app-container" class="!border-none !shadow-none !m-0 !rounded-none">
-
-        <div id="setup-screen" class="p-4 md:p-8 flex flex-col justify-center items-center h-full w-full">
-            <div class="w-full max-w-lg text-center">
-                <div class="card p-8 md:p-10">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Decision Making Practice</h1>
-                    <p class="text-gray-600 mt-2 text-lg mb-8">Sharpen your skills for the UCAT DM section.</p>
-                    <div class="text-left space-y-3 mb-8 bg-blue-50/50 border border-blue-200/50 rounded-lg p-4">
-                        <p class="text-sm text-gray-800"><strong class="font-semibold">Questions:</strong> <span id="setup-question-count">5</span></p>
-                        <p class="text-sm text-gray-800"><strong class="font-semibold">Time Limit:</strong> <span id="setup-time-limit">8 minutes</span></p>
-                         <p class="text-sm text-gray-800"><strong class="font-semibold">Scoring:</strong> Up to 2 marks per question (10 total).</p>
-                    </div>
-                    <div class="mt-10">
-                        <button id="start-button" class="primary-button-new w-full text-lg">
-                            Start Exam
-                        </button>
-                    </div>
-                </div>
-            </div>
+<body>
+    <h1>Worksheet Dashboard</h1>
+    
+    <div class="worksheet-grid">
+        <div class="worksheet-card">
+            <h2>Worksheet 1</h2>
+            <a href="interpretinginfo1.html">Open Worksheet</a>
         </div>
-
-
-        <div id="exam-screen" class="hidden flex flex-col h-full">
-            <div class="header-bar">
-                <span id="exam-title" class="font-semibold">Decision Making</span>
-                <div class="flex items-center space-x-4">
-                    <div id="timer" class="text-base px-3 py-1 rounded-md">8:00</div>
-                    <span class="text-sm">Question <span id="question-number-info">1</span> of 5</span>
-                    <button id="flag-button" class="text-sm font-medium border border-white rounded px-2 py-1">Flag</button>
-                </div>
-            </div>
-            <div class="main-content-area">
-                <div class="passage-column">
-                    <h3 class="text-lg font-semibold mb-2 sticky top-0 bg-white pb-1">Information</span></h3>
-                    <div id="passage-text" class="text-base text-gray-800 leading-relaxed whitespace-pre-wrap"></div>
-                </div>
-                <div class="question-column">
-                     <h4 class="text-md font-semibold mb-3 sticky top-0 bg-white pb-1">Place 'Yes' if the conclusion does follow. Place 'No' if the conclusion does not follow.</h4>
-                    <div id="dm-container">
-                        <div id="dm-statements">
-                            </div>
-                        <div id="dm-options">
-                            <div id="dm-yes-button" class="dm-option-button">Yes</div>
-                            <div id="dm-no-button" class="dm-option-button">No</div>
-                        </div>
-                    </div>
-                    <div id="review-explanation-container"></div>
-                </div>
-            </div>
-            <div class="footer-bar">
-                <button id="back-to-results-button" class="hidden mr-auto">← Back to Results</button>
-                <div class="flex items-center space-x-2 ml-auto">
-                    <button id="prev-button" disabled>← Previous</button>
-                    <button id="next-button">Next →</button>
-                </div>
-            </div>
+        
+        <div class="worksheet-card">
+            <h2>Worksheet 2</h2>
+            <a href="#">Coming Soon</a>
         </div>
-
-        <div id="results-screen" class="hidden p-4 md:p-8 flex-col h-full overflow-y-auto w-full">
-            <div class="w-full max-w-4xl mx-auto">
-                <div class="text-center mb-8">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900">Exam Results</h2>
-                    <p class="text-gray-600 mt-2">Here's a breakdown of your performance.</p>
-                </div>
-
-                <div class="card p-8 mb-8 text-center">
-                    <p class="text-lg text-gray-600 mb-2">Your Score</p>
-                    <p class="text-6xl font-bold text-gray-900"><span id="score">0</span><span class="text-4xl text-gray-500"> / <span id="total-questions-results">10</span></span></p>
-                    <div class="mt-4 h-1 w-24 bg-indigo-200 mx-auto rounded-full"></div>
-                    <p class="mt-4 text-md text-gray-500">Time Taken: <span id="time-taken" class="font-semibold"></span></p>
-                </div>
-
-                <div class="card p-6">
-                   <h3 class="text-lg font-semibold mb-1 text-gray-800">Detailed Results</h3>
-                   <p class="text-sm text-gray-500 mb-4">Click a box to review the question.</p>
-                   <div id="results-grid-container"></div>
-                </div>
-                 <div class="text-center flex justify-center items-center space-x-4 mt-8">
-                    <button onclick="window.location.reload()" class="primary-button-new">
-                        Try Again
-                    </button>
-                </div>
-            </div>
+        
+        <div class="worksheet-card">
+            <h2>Worksheet 3</h2>
+            <a href="#">Coming Soon</a>
         </div>
-
     </div>
-
-    <script>
-        const questions = [
-            {
-                passage: `As cities strive to green their skylines, rooftop beekeeping has surged. Most hobbyists install fully established colonies-already containing a laying queen and thousands of workers directly onto roof terraces rather than rearing larvae on-site. Although urban flowers offer season-long nectar, the total forage available per square kilometre is fixed; crowding too many hives into one district can force both managed and wild pollinators to compete for the same blossoms. Field virologists have shown that parasites harboured by commercial honey-bees can spill over to bumble-bees and solitary bees through shared floral resources. Long-term transects reveal an inverse relationship between hive density and the abundance of wild pollinators; the effect is most pronounced where green roofs are scarce. Researchers therefore argue that bolstering forage capacity-for example, by converting flat roofs into native-plant gardens-would likely yield greater ecological benefit than simply adding yet more hives.`,
-                statements: [
-                    "Wild bees routinely migrate hundreds of kilometres each year to reach richer feeding grounds.",
-                    "Urban beekeepers generally introduce colonies that are already in a late developmental stage.",
-                    "Managed honey-bees can unintentionally harm native pollinator species.",
-                    "Increasing the number of flowering roofs is guaranteed to reduce competition among bees.",
-                    "Limiting hive density may be a more effective conservation tactic than releasing additional managed colonies."
-                ],
-                correctAnswers: ["No", "Yes", "Yes", "No", "Yes"],
-                explanations: [
-                    "The passage does not mention the migration habits of wild bees.",
-                    "Correct. The text states hobbyists install 'fully established colonies-already containing a laying queen and thousands of workers'.",
-                    "Correct. The passage mentions parasites from commercial honey-bees can 'spill over' to wild pollinators.",
-                    "The passage suggests this would 'likely yield greater ecological benefit', which is not a guarantee.",
-                    "Correct. The passage implies this by highlighting the problems of high hive density (competition, parasites) and suggesting improving forage as a better alternative to adding more hives."
-                ]
-            },
-            {
-                passage: `University lecturers are confronting a new wave of "Al-essay sceptics" - students who arrive with polished assignments and insist they were written without the aid of large-language-model tools. Most faculties now run submissions through commercial Al-authorship detectors, but the vendors concede that spurious positives occur, especially with highly formulaic or second-language prose. A handful of tutors respond by docking marks the moment a detector flags text, triggering disputes that sometimes end in the student requesting reassessment by an independent board. Other academics, mindful of documented error rates, will withhold any penalty until further evidence (for example, process-drafts or vivas) supports the machine's verdict, and some admit that on rare occasions the detector is vindicated. All agree that the episode is unsettling for staff long accustomed to being the ultimate arbiters of academic originality.`,
-                statements: [
-                    "Lecturers refrain from punishing alleged Al misuse unless they feel justified in doing so.",
-                    "Faculty members acknowledge that Al-authorship detectors can occasionally be wrong.",
-                    "Every student whose work is flagged by the software is automatically cheating.",
-                    "In certain circumstances, a student may be better served by having their paper reviewed by a different academic body.",
-                    "Because detection tools are flawless, educators should rely solely on their output."
-                ],
-                correctAnswers: ["Yes", "Yes", "No", "Yes", "No"],
-                explanations: [
-                    "Correct. Some academics 'withhold any penalty until further evidence ... supports the machine's verdict'.",
-                    "Correct. The text mentions that vendors 'concede that spurious positives occur' and some academics are 'mindful of documented error rates'.",
-                    "The passage explicitly states that 'spurious positives occur', meaning a flag does not automatically equal cheating.",
-                    "Correct. The text mentions that disputes can lead to a student 'requesting reassessment by an independent board'.",
-                    "The passage directly contradicts this by stating the detectors are not flawless and can produce 'spurious positives'."
-                ]
-            },
-            {
-                passage: `This island nation once supplied nearly a quarter of the world's satellite-grade microchips, but a flood of cut-price processors from five continental rivals has pushed local fabs to run at barely 40% of capacity. Industry analysts warn that such under-utilisation is unsustainable and has already triggered layoffs in lithography and packaging. Defence officials add that the country's navy, drone programme and secure-comms satellites have-until now-depended on home-fabricated radiation-hardened chips; if domestic foundries collapse, critical systems would rely on foreign supply chains that could be embargoed without notice. Some economists therefore argue that import quotas or price floors may be required to prevent further attrition of local expertise, though no formal policy has yet been drafted.`,
-                statements: [
-                    "The country's semiconductor industry is facing a serious downturn.",
-                    "The nation's trade regulations must be completely rewritten.",
-                    "A thriving domestic chip market would automatically deliver a large boost to the overall economy.",
-                    "Growing reliance on imported chips could endanger national defence capabilities.",
-                    "Curbing foreign chip inflows may help resurrect local fabrication plants."
-                ],
-                correctAnswers: ["Yes", "No", "No", "Yes", "Yes"],
-                 explanations: [
-                    "Correct. The text supports this with phrases like 'barely 40% of capacity', 'unsustainable', and 'triggered layoffs'.",
-                    "The text states some economists 'argue' for specific measures like quotas, not that all regulations must be rewritten.",
-                    "The passage focuses on national security and industry survival, not a guaranteed 'large boost to the overall economy'.",
-                    "Correct. The passage warns that critical defence systems would 'rely on foreign supply chains that could be embargoed'.",
-                    "Correct. The text suggests that measures like quotas are argued for 'to prevent further attrition', implying they would help local plants."
-                ]
-            },
-            {
-                passage: `Ecologists tracing the decline of nocturnal insects have zeroed-in on urban light pollution-particularly the swift replacement of high-pressure-sodium lamps with white, blue-rich LEDs. Long-term trap counts from eight European and three Australasian cities show that, when compared with districts still lit by older amber lamps, LED corridors attract two-to-three times more moths and midges per square metre; however, mark-recapture assays reveal that only about 15% of those insects die directly beneath the luminaires. Laboratory spectra analyses confirm that LEDs emit a much larger share of photons below 500 nm, wavelengths known to interfere with melatonin production and circadian gene expression in many invertebrates. While some municipalities have experimented with fully red-shifted fixtures, field trials indicate that sky-glow reflected from neighbouring white-lit suburbs continues to alter insect behaviour. Consequently, researchers recommend shielded fittings and a 30% dimming policy after midnight as a more immediately practicable mitigation than an outright switch-off.`,
-                statements: [
-                    "All artificial street lighting inevitably results in mass insect mortality.",
-                    "Cities still using older amber lamps attract fewer insects than those illuminated by white LEDs.",
-                    "Blue-heavy light can disrupt physiological rhythms in many insects.",
-                    "Converting every fixture to red-shifted lamps completely removes the ecological impact of urban lighting.",
-                    "Lowering brightness and adding shields may be more feasible than a total blackout of city lights."
-                ],
-                correctAnswers: ["No", "Yes", "Yes", "No", "Yes"],
-                explanations: [
-                    "The passage states 'only about 15% of those insects die directly beneath the luminaires', which contradicts 'mass mortality'.",
-                    "Correct. LED corridors 'attract two-to-three times more moths and midges' than areas with older amber lamps.",
-                    "Correct. The text states light below 500nm (blue-rich) is 'known to interfere with melatonin production and circadian gene expression'.",
-                    "The passage states that even with red-shifted lamps, 'sky-glow reflected from neighbouring white-lit suburbs continues to alter insect behaviour'.",
-                    "Correct. The passage recommends shielding and dimming as a 'more immediately practicable mitigation'."
-                ]
-            },
-            {
-                passage: `In response to spiralling road-traffic congestion, the city of Lysander has run a two-year pilot in which autonomous delivery drones glide along predetermined aerial corridors between 06:00 and 22:00. Although each craft may carry no more than 5 kg per sortie and must divert to ground-level "safe harbours" during high winds, incident reports show only three minor collisions across 280 000 flights. Municipal surveys reveal that 65% of residents now say they feel "safer or equally safe" sharing air-space with the drones than with the scooters formerly used for last-mile service. Because actuarial models treat the drones' laser-range sensors and redundant rotors as risk-mitigating, insurers have trimmed premiums for participating couriers by an average of 12%. However, federal aviation rules still limit operations to pilot cities; national roll-out awaits a licensing overhaul currently under parliamentary review.`,
-                statements: [
-                    "The drone initiative has worsened urban traffic congestion.",
-                    "Public confidence in the safety of drone deliveries has fallen.",
-                    "The programme authorises drones to transport industrial loads exceeding 20 kg.",
-                    "Courier companies in the pilot pay lower insurance premiums than before the drone rollout.",
-                    "Drones are already permitted to fly nationwide under all weather conditions."
-                ],
-                correctAnswers: ["No", "No", "No", "Yes", "No"],
-                explanations: [
-                    "The initiative was implemented 'in response to' congestion, aiming to alleviate it, not worsen it.",
-                    "The passage states '65% of residents now say they feel \"safer or equally safe\"', indicating confidence has not fallen.",
-                    "The passage specifies a weight limit of 'no more than 5 kg per sortie'.",
-                    "Correct. Insurers 'have trimmed premiums for participating couriers by an average of 12%'.",
-                    "The passage clearly states operations are limited to 'pilot cities' and drones must divert in 'high winds'."
-                ]
-            }
-        ];
-
-        let currentQuestionIndex = 0;
-        let userAnswers = new Array(questions.length).fill(null).map(() => new Array(5).fill(null));
-        let timerInterval;
-        let timeLeft = 8 * 60; // 8 minutes
-        let examStartTime;
-        let examEndTime;
-        let flaggedQuestions = new Array(questions.length).fill(false);
-        let selectedAnswerBox = null;
-        
-        const setupScreen = document.getElementById('setup-screen');
-        const examScreen = document.getElementById('exam-screen');
-        const resultsScreen = document.getElementById('results-screen');
-        const startButton = document.getElementById('start-button');
-        const prevButton = document.getElementById('prev-button');
-        const nextButton = document.getElementById('next-button');
-        const backToResultsButton = document.getElementById('back-to-results-button');
-        const flagButton = document.getElementById('flag-button');
-        const passageTextEl = document.getElementById('passage-text');
-        const questionNumberInfoEl = document.getElementById('question-number-info');
-        const dmStatementsContainer = document.getElementById('dm-statements');
-        const dmYesButton = document.getElementById('dm-yes-button');
-        const dmNoButton = document.getElementById('dm-no-button');
-        const timerEl = document.getElementById('timer');
-        const scoreEl = document.getElementById('score');
-        const totalQuestionsResultsEl = document.getElementById('total-questions-results');
-        const timeTakenEl = document.getElementById('time-taken');
-        const resultsGridContainer = document.getElementById('results-grid-container');
-        const reviewExplanationContainer = document.getElementById('review-explanation-container');
-
-        function startTimer() {
-            examStartTime = new Date();
-            clearInterval(timerInterval);
-            timerEl.textContent = formatTimeSeconds(timeLeft);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                timerEl.textContent = formatTimeSeconds(timeLeft);
-                if (timeLeft <= 0) {
-                    endExamAndShowResults();
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-            examEndTime = examEndTime || new Date();
-        }
-
-        function formatTimeSeconds(totalSeconds) {
-            if (totalSeconds < 0) totalSeconds = 0;
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-        
-        function formatTimeDifference(milliseconds) {
-            if (!milliseconds || milliseconds < 0) return "0 min 0 sec";
-            const totalSeconds = Math.round(milliseconds / 1000);
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
-            return `${minutes} min ${seconds < 10 ? '0' : ''} sec`;
-        }
-
-        function loadQuestion(index, reviewMode = false) {
-            if (index < 0 || index >= questions.length) return;
-            currentQuestionIndex = index;
-
-            const question = questions[index];
-            passageTextEl.innerHTML = question.passage.replace(/\n/g, '<br><br>');
-            questionNumberInfoEl.textContent = `${index + 1} of ${questions.length}`;
-            
-            dmStatementsContainer.innerHTML = '';
-            reviewExplanationContainer.innerHTML = '';
-            selectedAnswerBox = null;
-
-            question.statements.forEach((statement, statementIndex) => {
-                const row = document.createElement('div');
-                row.className = 'statement-row';
-
-                const textDiv = document.createElement('div');
-                textDiv.className = 'statement-text';
-                textDiv.textContent = statement;
-
-                const answerDiv = document.createElement('div');
-                answerDiv.className = 'answer-box';
-                answerDiv.dataset.statementIndex = statementIndex;
-
-                const currentAnswer = userAnswers[index][statementIndex];
-                if (currentAnswer) {
-                    answerDiv.classList.add(currentAnswer.toLowerCase());
-                    answerDiv.textContent = currentAnswer;
-                }
-                
-                if (!reviewMode) {
-                    answerDiv.addEventListener('click', () => {
-                        // Deselect if clicking the same box
-                        if (selectedAnswerBox === answerDiv) {
-                             selectedAnswerBox.classList.remove('selected-for-answer');
-                             selectedAnswerBox = null;
-                        } else {
-                            // Deselect previous and select new
-                            if (selectedAnswerBox) {
-                                selectedAnswerBox.classList.remove('selected-for-answer');
-                            }
-                            selectedAnswerBox = answerDiv;
-                            selectedAnswerBox.classList.add('selected-for-answer');
-                        }
-                    });
-                }
-
-                row.appendChild(textDiv);
-                row.appendChild(answerDiv);
-                dmStatementsContainer.appendChild(row);
-            });
-            
-            // Handle review mode display
-            if (reviewMode) {
-                const explanationDiv = document.createElement('div');
-                explanationDiv.className = 'explanation-box';
-                
-                let explanationHTML = '<h5>Explanations</h5>';
-                const correctAnswers = question.correctAnswers;
-                const studentAnswers = userAnswers[index];
-                
-                question.statements.forEach((statement, i) => {
-                    const isCorrect = studentAnswers[i] === correctAnswers[i];
-                    explanationHTML += `
-                        <div class="statement-review ${isCorrect ? 'correct' : 'incorrect'}">
-                            <strong>Statement ${i+1}:</strong> ${statement}<br>
-                            <em>Your answer: ${studentAnswers[i] || 'None'} | Correct answer: ${correctAnswers[i]}</em><br>
-                            <small>${question.explanations[i]}</small>
-                        </div>
-                    `;
-                });
-                
-                explanationDiv.innerHTML = explanationHTML;
-                reviewExplanationContainer.appendChild(explanationDiv);
-                
-                // Disable answer buttons in review
-                dmYesButton.style.display = 'none';
-                dmNoButton.style.display = 'none';
-
-            } else {
-                 dmYesButton.style.display = 'block';
-                 dmNoButton.style.display = 'block';
-            }
-
-
-            prevButton.disabled = index === 0;
-            nextButton.textContent = (index === questions.length - 1 && !reviewMode) ? 'Finish Exam' : 'Next →';
-            flagButton.classList.toggle('flagged', flaggedQuestions[index]);
-            backToResultsButton.classList.toggle('hidden', !reviewMode);
-        }
-        
-        function handleOptionSelect(answer) {
-             if (selectedAnswerBox) {
-                const statementIndex = selectedAnswerBox.dataset.statementIndex;
-                userAnswers[currentQuestionIndex][statementIndex] = answer;
-                
-                // Update UI
-                selectedAnswerBox.textContent = answer;
-                selectedAnswerBox.classList.remove('no', 'yes', 'selected-for-answer');
-                selectedAnswerBox.classList.add(answer.toLowerCase());
-                
-                // Deselect after answering
-                selectedAnswerBox = null;
-             }
-        }
-
-        function showNextQuestion() {
-            const isReviewing = !backToResultsButton.classList.contains('hidden');
-            const nextIndex = currentQuestionIndex + 1;
-            if (nextIndex < questions.length) {
-                loadQuestion(nextIndex, isReviewing);
-            } else if (!isReviewing) {
-                endExamAndShowResults();
-            }
-        }
-        
-        function showPrevQuestion() {
-            const isReviewing = !backToResultsButton.classList.contains('hidden');
-            if (currentQuestionIndex > 0) {
-                loadQuestion(currentQuestionIndex - 1, isReviewing);
-            }
-        }
-
-        function showScreen(screenToShow) {
-            [setupScreen, examScreen, resultsScreen].forEach(screen => {
-                screen.classList.add('hidden');
-                screen.classList.remove('flex');
-            });
-            screenToShow.classList.remove('hidden');
-            if(screenToShow !== examScreen) appContainer.classList.remove('!border-none', '!shadow-none', '!m-0', '!rounded-none');
-            else appContainer.classList.add('!border-none', '!shadow-none', '!m-0', '!rounded-none');
-
-            if (screenToShow === setupScreen || screenToShow === resultsScreen) {
-                screenToShow.classList.add('flex');
-            }
-        }
-
-        function showResultsScreen() {
-            stopTimer();
-            showScreen(resultsScreen);
-            
-            let totalScore = 0;
-            resultsGridContainer.innerHTML = '';
-            
-            questions.forEach((qData, index) => {
-                const userAns = userAnswers[index];
-                const correctAns = qData.correctAnswers;
-                let correctCount = 0;
-                
-                for(let i=0; i < correctAns.length; i++) {
-                    if (userAns[i] === correctAns[i]) {
-                        correctCount++;
-                    }
-                }
-                
-                let marksAwarded = 0;
-                let resultClass = 'result-box-bad';
-                
-                if (correctCount === 5) {
-                    marksAwarded = 2;
-                    resultClass = 'result-box-perfect';
-                } else if (correctCount === 4) {
-                    marksAwarded = 1;
-                    resultClass = 'result-box-good';
-                }
-                totalScore += marksAwarded;
-                
-                const resultBox = document.createElement('div');
-                resultBox.className = `result-box ${resultClass}`;
-                if (flaggedQuestions[index]) resultBox.classList.add('result-box-flagged');
-                
-                resultBox.innerHTML = `
-                    <div class="question-num">Question ${index + 1}</div>
-                    <div class="marks-awarded">${marksAwarded}</div>
-                    <div class="correct-count">${correctCount}/5 correct</div>
-                `;
-                
-                resultBox.addEventListener('click', () => revisitQuestionFromResults(index));
-                resultsGridContainer.appendChild(resultBox);
-            });
-            
-            scoreEl.textContent = totalScore;
-            timeTakenEl.textContent = formatTimeDifference(examEndTime - examStartTime);
-        }
-
-        function endExamAndShowResults() {
-            stopTimer();
-            showResultsScreen();
-        }
-        
-        function revisitQuestionFromResults(index) {
-            showScreen(examScreen);
-            examScreen.classList.add('flex');
-            loadQuestion(index, true); // Load in review mode
-        }
-
-        // --- Event Listeners ---
-        startButton.addEventListener('click', () => {
-            timeLeft = 8 * 60;
-            showScreen(examScreen);
-            examScreen.classList.add('flex');
-            startTimer();
-            loadQuestion(0);
-        });
-
-        nextButton.addEventListener('click', showNextQuestion);
-        prevButton.addEventListener('click', showPrevQuestion);
-        dmYesButton.addEventListener('click', () => handleOptionSelect('Yes'));
-        dmNoButton.addEventListener('click', () => handleOptionSelect('No'));
-        
-        flagButton.addEventListener('click', () => {
-            flaggedQuestions[currentQuestionIndex] = !flaggedQuestions[currentQuestionIndex];
-            flagButton.classList.toggle('flagged', flaggedQuestions[currentQuestionIndex]);
-        });
-        
-        backToResultsButton.addEventListener('click', () => {
-            showResultsScreen();
-        });
-
-
-        // --- Initial Load ---
-        showScreen(setupScreen);
-    </script>
 </body>
-</html>
+</html> 
