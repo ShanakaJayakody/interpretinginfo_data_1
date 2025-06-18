@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Worksheet 2 - Information Interpretation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -107,14 +110,112 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+        .instructions-box {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 30px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .answer-option {
+            background: #fff;
+            border: 2px solid #3498db;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: move;
+            border-radius: 5px;
+            display: inline-block;
+        }
+
+        .answer-dropzone {
+            width: 100px;
+            height: 40px;
+            border: 2px dashed #ccc;
+            display: inline-block;
+            margin-left: 10px;
+            border-radius: 5px;
+            vertical-align: middle;
+        }
+
+        .answer-dropzone.filled {
+            border-style: solid;
+            background-color: #f8f9fa;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            text-align: center;
+        }
+
+        .result-perfect {
+            background-color: #2ecc71;
+        }
+
+        .result-partial {
+            background-color: #f39c12;
+        }
+
+        .result-zero {
+            background-color: #e74c3c;
+        }
+
+        .question-time {
+            font-size: 0.9em;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+
+        /* Ensure first question is visible */
+        #question1 {
+            display: block !important;
+        }
     </style>
 </head>
 <body>
+    <div class="timer" id="timer">00:00</div>
     <div class="progress">
         Questions answered: <span id="answered">0</span>/25
     </div>
     <div class="container">
         <h1>Worksheet 2: Information Interpretation</h1>
+        
+        <div class="instructions-box">
+            <h4>Instructions</h4>
+            <p>Read each passage carefully and answer whether each statement follows from the information provided.</p>
+            <p>Drag 'Yes' or 'No' to the boxes next to each statement.</p>
+        </div>
+
+        <!-- Answer options that can be dragged -->
+        <div class="answer-options" style="text-align: center; margin-bottom: 20px;">
+            <div class="answer-option" data-value="Yes">Yes</div>
+            <div class="answer-option" data-value="No">No</div>
+        </div>
 
         <!-- Question 1 -->
         <div class="question-section">
@@ -129,47 +230,42 @@
             <div class="sub-questions">
                 <div class="sub-question">
                     <p>1. The source wished to keep their true identity undisclosed.</p>
-                    <select id="q1_1" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q1_1" class="answer-dropzone" data-question="1" data-statement="1"></div>
+                    </div>
                     <div class="feedback" id="feedback_q1_1"></div>
                 </div>
                 <div class="sub-question">
                     <p>2. Nearly the entire online audience immediately dismissed NullPrime's claims.</p>
-                    <select id="q1_2" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q1_2" class="answer-dropzone" data-question="1" data-statement="2"></div>
+                    </div>
                     <div class="feedback" id="feedback_q1_2"></div>
                 </div>
                 <div class="sub-question">
                     <p>3. The smart-speaker company is explicitly described as globally famous.</p>
-                    <select id="q1_3" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q1_3" class="answer-dropzone" data-question="1" data-statement="3"></div>
+                    </div>
                     <div class="feedback" id="feedback_q1_3"></div>
                 </div>
                 <div class="sub-question">
                     <p>4. NullPrime is stated to have been a senior employee of the company.</p>
-                    <select id="q1_4" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q1_4" class="answer-dropzone" data-question="1" data-statement="4"></div>
+                    </div>
                     <div class="feedback" id="feedback_q1_4"></div>
                 </div>
                 <div class="sub-question">
                     <p>5. Government regulators have initiated an official examination of the allegations.</p>
-                    <select id="q1_5" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q1_5" class="answer-dropzone" data-question="1" data-statement="5"></div>
+                    </div>
                     <div class="feedback" id="feedback_q1_5"></div>
                 </div>
             </div>
@@ -188,47 +284,42 @@
             <div class="sub-questions">
                 <div class="sub-question">
                     <p>1. Roughly half of all internet-facing servers remained unprotected after the SocketSpill fix was published.</p>
-                    <select id="q2_1" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q2_1" class="answer-dropzone" data-question="2" data-statement="1"></div>
+                    </div>
                     <div class="feedback" id="feedback_q2_1"></div>
                 </div>
                 <div class="sub-question">
                     <p>2. Deploying the vendor's patch scarcely reduces the probability of a successful cyber-attack.</p>
-                    <select id="q2_2" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q2_2" class="answer-dropzone" data-question="2" data-statement="2"></div>
+                    </div>
                     <div class="feedback" id="feedback_q2_2"></div>
                 </div>
                 <div class="sub-question">
                     <p>3. The consortium's study concentrated solely on North-American infrastructure.</p>
-                    <select id="q2_3" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q2_3" class="answer-dropzone" data-question="2" data-statement="3"></div>
+                    </div>
                     <div class="feedback" id="feedback_q2_3"></div>
                 </div>
                 <div class="sub-question">
                     <p>4. Administrator chatter can help explain why self-reported outages spiked once the patch rolled out.</p>
-                    <select id="q2_4" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q2_4" class="answer-dropzone" data-question="2" data-statement="4"></div>
+                    </div>
                     <div class="feedback" id="feedback_q2_4"></div>
                 </div>
                 <div class="sub-question">
                     <p>5. The phenomenon labelled "patchxiety" is linked to negative psychological side-effects among system operators.</p>
-                    <select id="q2_5" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q2_5" class="answer-dropzone" data-question="2" data-statement="5"></div>
+                    </div>
                     <div class="feedback" id="feedback_q2_5"></div>
                 </div>
             </div>
@@ -246,47 +337,42 @@
             <div class="sub-questions">
                 <div class="sub-question">
                     <p>1. A warehouse whose tasks demand ultra-fine real-time accuracy should steer clear of power-assist exoskeletons.</p>
-                    <select id="q3_1" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q3_1" class="answer-dropzone" data-question="3" data-statement="1"></div>
+                    </div>
                     <div class="feedback" id="feedback_q3_1"></div>
                 </div>
                 <div class="sub-question">
                     <p>2. Subscribing to exoskeletons can make a firm's safety investment more cost-efficient.</p>
-                    <select id="q3_2" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q3_2" class="answer-dropzone" data-question="3" data-statement="2"></div>
+                    </div>
                     <div class="feedback" id="feedback_q3_2"></div>
                 </div>
                 <div class="sub-question">
                     <p>3. Firm A restores injured staff to full duty faster than Firm B; therefore Firm A must use exoskeletons.</p>
-                    <select id="q3_3" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q3_3" class="answer-dropzone" data-question="3" data-statement="3"></div>
+                    </div>
                     <div class="feedback" id="feedback_q3_3"></div>
                 </div>
                 <div class="sub-question">
                     <p>4. Companies that adopt exoskeletons invariably spend less on safety than companies that do not.</p>
-                    <select id="q3_4" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q3_4" class="answer-dropzone" data-question="3" data-statement="4"></div>
+                    </div>
                     <div class="feedback" id="feedback_q3_4"></div>
                 </div>
                 <div class="sub-question">
                     <p>5. On average, an exoskeleton programme shortens recovery time by eight days compared with manual-handling methods.</p>
-                    <select id="q3_5" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q3_5" class="answer-dropzone" data-question="3" data-statement="5"></div>
+                    </div>
                     <div class="feedback" id="feedback_q3_5"></div>
                 </div>
             </div>
@@ -305,47 +391,42 @@
             <div class="sub-questions">
                 <div class="sub-question">
                     <p>1. A broader, more integrated risk-control framework is needed to address these trading errors.</p>
-                    <select id="q4_1" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q4_1" class="answer-dropzone" data-question="4" data-statement="1"></div>
+                    </div>
                     <div class="feedback" id="feedback_q4_1"></div>
                 </div>
                 <div class="sub-question">
                     <p>2. New insurance offerings are emerging that specifically cover losses caused by employees' parameter over-rides.</p>
-                    <select id="q4_2" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q4_2" class="answer-dropzone" data-question="4" data-statement="2"></div>
+                    </div>
                     <div class="feedback" id="feedback_q4_2"></div>
                 </div>
                 <div class="sub-question">
                     <p>3. The majority of trading errors committed by staff are deliberate attempts to bypass regulations.</p>
-                    <select id="q4_3" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q4_3" class="answer-dropzone" data-question="4" data-statement="3"></div>
+                    </div>
                     <div class="feedback" id="feedback_q4_3"></div>
                 </div>
                 <div class="sub-question">
                     <p>4. Some traders fail to distinguish between shortcuts they use at home and those appropriate for the bank's platform.</p>
-                    <select id="q4_4" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q4_4" class="answer-dropzone" data-question="4" data-statement="4"></div>
+                    </div>
                     <div class="feedback" id="feedback_q4_4"></div>
                 </div>
                 <div class="sub-question">
                     <p>5. External hacking remains demonstrably harder to mitigate than the internal "in-house drift" events described.</p>
-                    <select id="q4_5" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q4_5" class="answer-dropzone" data-question="4" data-statement="5"></div>
+                    </div>
                     <div class="feedback" id="feedback_q4_5"></div>
                 </div>
             </div>
@@ -363,47 +444,42 @@
             <div class="sub-questions">
                 <div class="sub-question">
                     <p>1. Neutron tomography provides clearer insight into dendrite growth in solid-state batteries than X-ray imaging.</p>
-                    <select id="q5_1" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q5_1" class="answer-dropzone" data-question="5" data-statement="1"></div>
+                    </div>
                     <div class="feedback" id="feedback_q5_1"></div>
                 </div>
                 <div class="sub-question">
                     <p>2. Solid-state batteries carry a lower fire risk than traditional lithium-ion packs.</p>
-                    <select id="q5_2" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q5_2" class="answer-dropzone" data-question="5" data-statement="2"></div>
+                    </div>
                     <div class="feedback" id="feedback_q5_2"></div>
                 </div>
                 <div class="sub-question">
                     <p>3. Solid-state batteries are already mass-produced on the same continuous scale as lithium-ion cells.</p>
-                    <select id="q5_3" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q5_3" class="answer-dropzone" data-question="5" data-statement="3"></div>
+                    </div>
                     <div class="feedback" id="feedback_q5_3"></div>
                 </div>
                 <div class="sub-question">
                     <p>4. Solid-state batteries can be charged more quickly than lithium-ion cells because ions move faster through the solid electrolyte.</p>
-                    <select id="q5_4" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q5_4" class="answer-dropzone" data-question="5" data-statement="4"></div>
+                    </div>
                     <div class="feedback" id="feedback_q5_4"></div>
                 </div>
                 <div class="sub-question">
                     <p>5. For observing light elements inside battery cells, X-ray imaging is preferred over neutron tomography.</p>
-                    <select id="q5_5" onchange="updateProgress()">
-                        <option value="">Select Answer</option>
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                    </select>
+                    <div class="statement-container">
+                        <span class="statement-text">Answer:</span>
+                        <div id="q5_5" class="answer-dropzone" data-question="5" data-statement="5"></div>
+                    </div>
                     <div class="feedback" id="feedback_q5_5"></div>
                 </div>
             </div>
@@ -453,39 +529,105 @@
             q5_5: "No"
         };
 
-        function updateProgress() {
-            const totalQuestions = Object.keys(answers).length;
-            const answeredQuestions = Object.keys(answers).filter(id => 
-                document.getElementById(id).value !== ""
-            ).length;
-            document.getElementById("answered").textContent = answeredQuestions;
-        }
+        let startTime = Date.now();
+        let questionTimes = {};
+        let currentQuestion = 1;
 
+        // Timer functionality
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        setInterval(updateTimer, 1000);
+
+        // Initialize drag and drop
+        $(document).ready(function() {
+            $('.answer-option').draggable({
+                helper: 'clone',
+                revert: 'invalid'
+            });
+
+            $('.answer-dropzone').droppable({
+                accept: '.answer-option',
+                drop: function(event, ui) {
+                    const answer = ui.draggable.data('value');
+                    $(this).text(answer);
+                    $(this).addClass('filled');
+                    $(this).data('value', answer);
+                    updateProgress();
+                }
+            });
+        });
+
+        // Modified checkAnswers function to include timing and color-coded results
         function checkAnswers() {
-            for (let questionId in answers) {
-                const selectedAnswer = document.getElementById(questionId).value;
-                const feedbackElement = document.getElementById(`feedback_${questionId}`);
+            const endTime = Date.now();
+            let results = [];
+            
+            for (let i = 1; i <= 5; i++) {
+                let correctCount = 0;
+                let questionAnswers = [];
                 
-                if (selectedAnswer === "") {
-                    feedbackElement.textContent = "Please select an answer";
-                    feedbackElement.className = "feedback incorrect";
-                    feedbackElement.style.display = "block";
-                    continue;
+                for (let j = 1; j <= 5; j++) {
+                    const id = `q${i}_${j}`;
+                    const dropzone = $(`#${id}`);
+                    const userAnswer = dropzone.data('value');
+                    const correctAnswer = answers[id];
+                    
+                    if (userAnswer === correctAnswer) {
+                        correctCount++;
+                    }
                 }
-
-                if (selectedAnswer === answers[questionId]) {
-                    feedbackElement.textContent = "Correct!";
-                    feedbackElement.className = "feedback correct";
+                
+                const timeSpent = Math.floor((endTime - startTime) / 1000);
+                let score = 0;
+                let colorClass = '';
+                
+                if (correctCount === 5) {
+                    score = 2;
+                    colorClass = 'result-perfect';
+                } else if (correctCount === 4) {
+                    score = 1;
+                    colorClass = 'result-partial';
                 } else {
-                    feedbackElement.textContent = "Incorrect. Try again!";
-                    feedbackElement.className = "feedback incorrect";
+                    colorClass = 'result-zero';
                 }
-                feedbackElement.style.display = "block";
+                
+                results.push({
+                    question: i,
+                    score: score,
+                    correctCount: correctCount,
+                    timeSpent: timeSpent,
+                    colorClass: colorClass
+                });
             }
+            
+            // Display results
+            const resultsHtml = results.map(result => `
+                <div class="result-box ${result.colorClass}">
+                    <h3>Question ${result.question}</h3>
+                    <p>Score: ${result.score}/2</p>
+                    <p>Correct: ${result.correctCount}/5</p>
+                    <p class="question-time">Time: ${result.timeSpent}s</p>
+                </div>
+            `).join('');
+            
+            $('#results-container').html(`
+                <h2>Results</h2>
+                <div class="results-grid">
+                    ${resultsHtml}
+                </div>
+            `);
         }
 
-        // Initialize progress counter
-        updateProgress();
+        // Make sure first question is visible on load
+        window.onload = function() {
+            document.querySelector('.question-section').style.display = 'block';
+            startTime = Date.now();
+        };
     </script>
 </body>
 </html> 
