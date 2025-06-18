@@ -855,7 +855,7 @@ const firebaseConfig = {
             
             userGoal = document.getElementById('goal').value.trim();
             userFocusArea = document.getElementById('focus-area').value.trim();
-            timeLeft = 360; // 6 minutes in seconds
+            timeLeft = 540; // 9 minutes in seconds
             
             // Make sure arrays are properly initialized with the correct length
             if (userAnswers.length !== questions.length) {
@@ -893,7 +893,7 @@ const firebaseConfig = {
         let currentQuestionIndex = 0;
         let userAnswers = [];
         let timerInterval;
-        let timeLeft = 360; // 6 minutes in seconds 
+        let timeLeft = 540; // 9 minutes in seconds 
         let practiceSessionStartTime;
         let practiceSessionEndTime;
         let userName = '';
@@ -1348,7 +1348,7 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
             currentlyDisplayedPassageIndex = -1;
             
             if (setupQuestionCountEl) setupQuestionCountEl.textContent = "5"; // Change to 5 questions
-            if (setupTimeLimitEl) setupTimeLimitEl.textContent = `6 minutes`; // Change to 6 minutes
+            if (setupTimeLimitEl) setupTimeLimitEl.textContent = `9 minutes`; // Change to 9 minutes
             if (goalInput) {
                 goalInput.max = 10; // Change max goal to 10
                 goalInput.value = userGoal;
@@ -2501,7 +2501,7 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
             
             userGoal = goalInput.value.trim();
             userFocusArea = focusAreaInput.value.trim();
-            timeLeft = 360; // 6 minutes
+            timeLeft = 540; // 9 minutes
             userAnswers = new Array(questions.length).fill(null);
             questionTimes = new Array(questions.length).fill(0);
             flaggedQuestions = new Array(questions.length).fill(false);
