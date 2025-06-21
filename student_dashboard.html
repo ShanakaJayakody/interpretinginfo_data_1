@@ -273,7 +273,8 @@
             refreshButton.disabled = true;
 
             try {
-                const querySnapshot = await db.collection("performanceSubmissions")
+                // First, try to get results by userId
+                let querySnapshot = await db.collection("performanceSubmissions")
                     .where("userId", "==", currentUser.uid)
                     .orderBy("submissionTimestamp", "desc")
                     .get();
@@ -287,6 +288,23 @@
                     });
                 });
 
+                // If no results found by userId, try to find by email address
+                if (results.length === 0 && currentUser.email) {
+                    console.log("No results found by userId, trying email:", currentUser.email);
+                    querySnapshot = await db.collection("performanceSubmissions")
+                        .where("studentEmail", "==", currentUser.email)
+                        .orderBy("submissionTimestamp", "desc")
+                        .get();
+
+                    querySnapshot.forEach((doc) => {
+                        const data = doc.data();
+                        results.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    });
+                }
+
                 if (results.length === 0) {
                     showNoResults();
                 } else {
@@ -295,7 +313,50 @@
                 }
             } catch (error) {
                 console.error("Error loading results:", error);
-                showNoResults();
+                // If the orderBy query fails (e.g., missing index), try without orderBy
+                try {
+                    console.log("Trying fallback query without orderBy");
+                    let fallbackQuery = await db.collection("performanceSubmissions")
+                        .where("userId", "==", currentUser.uid)
+                        .get();
+
+                    const results = [];
+                    fallbackQuery.forEach((doc) => {
+                        const data = doc.data();
+                        results.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    });
+
+                    // Try email fallback if still no results
+                    if (results.length === 0 && currentUser.email) {
+                        fallbackQuery = await db.collection("performanceSubmissions")
+                            .where("studentEmail", "==", currentUser.email)
+                            .get();
+
+                        fallbackQuery.forEach((doc) => {
+                            const data = doc.data();
+                            results.push({
+                                id: doc.id,
+                                ...data
+                            });
+                        });
+                    }
+
+                    // Sort results manually by timestamp
+                    results.sort((a, b) => new Date(b.submissionTimestamp) - new Date(a.submissionTimestamp));
+
+                    if (results.length === 0) {
+                        showNoResults();
+                    } else {
+                        displayResults(results);
+                        updateStatistics(results);
+                    }
+                } catch (fallbackError) {
+                    console.error("Fallback query also failed:", fallbackError);
+                    showNoResults();
+                }
             } finally {
                 loadingSpinner.style.display = 'none';
                 refreshButton.disabled = false;

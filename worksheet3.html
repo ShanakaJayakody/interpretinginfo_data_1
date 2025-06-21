@@ -472,6 +472,11 @@
                  </p>
             </div>
             <div class="space-y-4 w-full max-w-md">
+                <div id="email-input-container" class="hidden">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email Address (required for results tracking):</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="your.email@example.com">
+                    <p class="text-xs text-gray-500 mt-1">Your email is needed to save and retrieve your test results.</p>
+                </div>
                 <div>
                     <label for="goal" class="block text-sm font-medium text-gray-700">Goal (Score out of 10):</label>
                     <input type="number" id="goal" name="goal" min="0" max="10" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="e.g., 8">
@@ -656,10 +661,20 @@ const firebaseConfig = {
         auth.onAuthStateChanged(user => { // Changed from firebase.auth() to auth
           if (user) {
                 console.log("User is logged in:", user.displayName, user.email);
+                // Hide email input since user is logged in
+                const emailContainer = document.getElementById('email-input-container');
+                if (emailContainer) {
+                    emailContainer.classList.add('hidden');
+                }
                 // Page-specific logic to handle a logged-in user would go here
                 // (e.g., hide login form, show user-specific content)
           } else {
                 console.log("No user is logged in");
+                // Show email input since user is not logged in
+                const emailContainer = document.getElementById('email-input-container');
+                if (emailContainer) {
+                    emailContainer.classList.remove('hidden');
+                }
                 // Page-specific logic to handle a logged-out user would go here
                 // (e.g., show login form, redirect to login page)
             }
@@ -677,9 +692,27 @@ const firebaseConfig = {
                 userEmail = currentUser.email || '';
                 console.log("Using user info from Firebase:", userName, userEmail);
             } else {
-                userName = '';
-                userEmail = '';
-                console.log("No user logged in - using empty user info");
+                // User is not logged in, check if they provided an email
+                const emailInput = document.getElementById('email');
+                const emailValue = emailInput ? emailInput.value.trim() : '';
+                
+                if (!emailValue) {
+                    alert('Please enter your email address to save your test results.');
+                    if (emailInput) emailInput.focus();
+                    return;
+                }
+                
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailValue)) {
+                    alert('Please enter a valid email address.');
+                    if (emailInput) emailInput.focus();
+                    return;
+                }
+                
+                userName = emailValue; // Use email as name if not logged in
+                userEmail = emailValue;
+                console.log("Using email from input:", userName, userEmail);
             }
             
             userGoal = document.getElementById('goal').value.trim();
@@ -1383,11 +1416,11 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
                 summaryBox.dataset.index = index;
                 summaryBox.title = `Click to review Question ${index + 1}`;
 
-                // Show score instead of time in the summary box
-                const scoreDisplay = document.createElement('span');
-                scoreDisplay.classList.add('time-display-in-box');
-                scoreDisplay.textContent = `${correctCount}/5`;
-                summaryBox.appendChild(scoreDisplay);
+                // Show time taken in seconds in the summary box
+                const timeDisplay = document.createElement('span');
+                timeDisplay.classList.add('time-display-in-box');
+                timeDisplay.textContent = `${timeSpentSec}s`;
+                summaryBox.appendChild(timeDisplay);
 
                 const numberLabel = document.createElement('div');
                 numberLabel.classList.add('question-number-label');
@@ -2325,9 +2358,27 @@ For example: an event with Catering Beta for 15 guests requiring 2.5 hours of se
                 userEmail = currentUser.email || '';
                 console.log("Using user info from Firebase:", userName, userEmail);
             } else {
-                userName = '';
-                userEmail = '';
-                console.log("No user logged in - using empty user info");
+                // User is not logged in, check if they provided an email
+                const emailInput = document.getElementById('email');
+                const emailValue = emailInput ? emailInput.value.trim() : '';
+                
+                if (!emailValue) {
+                    alert('Please enter your email address to save your test results.');
+                    if (emailInput) emailInput.focus();
+                    return;
+                }
+                
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailValue)) {
+                    alert('Please enter a valid email address.');
+                    if (emailInput) emailInput.focus();
+                    return;
+                }
+                
+                userName = emailValue; // Use email as name if not logged in
+                userEmail = emailValue;
+                console.log("Using email from input:", userName, userEmail);
             }
             
             userGoal = goalInput.value.trim();
